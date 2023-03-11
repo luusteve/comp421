@@ -14,9 +14,9 @@
 
 ### For you to design - (TO BE ASSIGN)
 
-(a) [10 pt] - (TO BE ASSIGN)
-(b) [40 pt] - (TO BE ASSIGN)
-(c) [30 pt] - (TO BE ASSIGN)
+* (a) [10 pt] - (TO BE ASSIGN)
+* (b) [40 pt] - (TO BE ASSIGN)
+* (c) [30 pt] - (TO BE ASSIGN)
 
 ## 4. [5 pt] (TO BE ASSIGN)
 
