@@ -6,18 +6,18 @@
 
 ## 3.Soccer.java
 
-### Exit application - (TO BE ASSIGN)
+### Exit application - STEVEN - DONE
 
-### List information of matches of a country - (TO BE ASSIGN)
+### List information of matches of a country - (TO BE ASSIGN) - (STATUS)
 
-### Insert initial player information - (TO BE ASSIGN)
+### Insert initial player information - (TO BE ASSIGN) - (STATUS)
 
-### For you to design - (TO BE ASSIGN)
+### For you to design - (TO BE ASSIGN) - (STATUS)
 
-* (a) [10 pt] - (TO BE ASSIGN)
-* (b) [40 pt] - (TO BE ASSIGN)
-* (c) [30 pt] - (TO BE ASSIGN)
+* (a) [10 pt] - (TO BE ASSIGN) - (STATUS)
+* (b) [40 pt] - (TO BE ASSIGN) - (STATUS)
+* (c) [30 pt] - (TO BE ASSIGN) - (STATUS)
 
-## 4. [5 pt] (TO BE ASSIGN)
+## 4. [5 pt] (TO BE ASSIGN) - (STATUS)
 
-## 5. [15 pt] (TO BE ASSIGN)
+## 5. [15 pt] (TO BE ASSIGN) - (STATUS)
