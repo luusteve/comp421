@@ -56,9 +56,7 @@ public class Soccer
                 case 3:
                 case 4:
                   //close the statement, connection and exit the application
-                  statement.close();
-                  con.close();
-                  System.exit(0);
+                  exitApplication(con, statement);
                   break;
                 default:
                   System.out.println(validOptionMsg);
@@ -174,5 +172,18 @@ public class Soccer
       // Finally but importantly close the statement and connection
       statement.close();
       con.close();
+    }
+
+    /**
+     * Close the statement, connection and exit the application
+     * 
+     * @param con Connection
+     * @param statement Statement
+     * @throws SQLException
+     */
+    private static void exitApplication(Connection con, Statement statement) throws SQLException {
+      statement.close();
+      con.close();
+      System.exit(0);
     }
 }
