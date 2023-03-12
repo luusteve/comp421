@@ -216,31 +216,40 @@ public class Soccer {
           break;
         }
         String querySQL = "SELECT \n" +
-            "  T1.country AS team1_country, \n" +
-            "  T2.country AS team2_country, \n" +
-            "  M.match_date, \n" +
-            "  M.round, \n" +
-            "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
-            "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
-            "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold, \n" +
-            "  M.mid AS match_id\n" +
-            "FROM \n" +
-            "  Ticket T,\n" +
-            "  Team T1\n" +
-            "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
-            "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-            "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
-            "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
-            "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n"
-            +
-            "  JOIN Match M ON TIM1.mid = M.mid\n" +
-            "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
-            "WHERE \n" +
-            "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n"
-            +
-            "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
-            "GROUP BY \n" +
-            "  T1.country, T2.country, M.match_date, M.round, M.mid";
+                "  T1.country AS team1_country, \n" +
+                "  T2.country AS team2_country, \n" +
+                "  M.match_date, \n" +
+                "  M.round, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold,\n" +
+                "  M.mid AS match_id\n" +
+                "FROM \n" +
+                "  Ticket T,\n" +
+                "  Team T1\n" +
+                "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
+                "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
+                "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
+                "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
+                "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
+                "  JOIN Match M ON TIM1.mid = M.mid\n" +
+                "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
+                "WHERE \n" +
+                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = 'Canada') OR \n" +
+                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = 'Canada') AND\n" +
+                "  M.mid NOT IN (\n" +
+                "    SELECT DISTINCT M2.mid\n" +
+                "    FROM Match M2\n" +
+                "    JOIN teaminmatch TIM1 ON TIM1.mid = M2.mid\n" +
+                "    JOIN teaminmatch TIM2 ON TIM2.mid = M2.mid\n" +
+                "    JOIN Team T1 ON T1.national_association_name = TIM1.national_association_name\n" +
+                "    JOIN Team T2 ON T2.national_association_name = TIM2.national_association_name\n" +
+                "    WHERE \n" +
+                "      (T1.country = 'Canada' AND T2.country <> 'Canada') OR \n" +
+                "      (T1.country <> 'Canada' AND T2.country = 'Canada')\n" +
+                "  )\n" +
+                "GROUP BY \n" +
+                "  M.mid, T1.country, T2.country, M.match_date, M.round;";
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         Set<Integer> mids = new HashSet<>();
         while (rs.next()) {
