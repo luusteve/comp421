@@ -235,8 +235,8 @@ public class Soccer {
                 "  JOIN Match M ON TIM1.mid = M.mid\n" +
                 "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
                 "WHERE \n" +
-                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = 'Canada') OR \n" +
-                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = 'Canada') AND\n" +
+                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
+                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "') AND\n" +
                 "  M.mid NOT IN (\n" +
                 "    SELECT DISTINCT M2.mid\n" +
                 "    FROM Match M2\n" +
@@ -245,8 +245,8 @@ public class Soccer {
                 "    JOIN Team T1 ON T1.national_association_name = TIM1.national_association_name\n" +
                 "    JOIN Team T2 ON T2.national_association_name = TIM2.national_association_name\n" +
                 "    WHERE \n" +
-                "      (T1.country = 'Canada' AND T2.country <> 'Canada') OR \n" +
-                "      (T1.country <> 'Canada' AND T2.country = 'Canada')\n" +
+                "      (T1.country = '" + country + "' AND T2.country <> '" + country + "') OR \n" +
+                "      (T1.country <> '" + country + "' AND T2.country = '" + country + "')\n" +
                 "  )\n" +
                 "GROUP BY \n" +
                 "  M.mid, T1.country, T2.country, M.match_date, M.round;";
