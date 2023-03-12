@@ -211,18 +211,19 @@ public class Soccer {
               "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
               "FROM \n" +
               "  Ticket T,\n" +
-              "  Team T1 \n" +
+              "  Team T1\n" +
+              "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
               "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-              "  JOIN Team T2 ON T1.group_letter < T2.group_letter \n" +
-              "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name\n" +
-              "  JOIN teaminmatch TIM ON TIM.national_association_name = T1.national_association_name OR TIM.national_association_name = T2.national_association_name \n" +
-              "  JOIN Match M ON TIM.mid = M.mid \n" +
+              "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
+              "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
+              "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
+              "  JOIN Match M ON TIM1.mid = M.mid\n" +
               "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
               "WHERE \n" +
-              "  (TIM.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
-              "  (TIM.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
+              "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
+              "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
               "GROUP BY \n" +
-              "  T1.country, T2.country, M.match_date, M.round;";
+              "  T1.country, T2.country, M.match_date, M.round";
       System.out.println(querySQL);
       java.sql.ResultSet rs = statement.executeQuery(querySQL);
     }
