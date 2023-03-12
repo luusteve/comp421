@@ -191,7 +191,7 @@ public class Soccer {
   }
 
   /**
-   * Inserts all relevant information for when a Goal is scored
+   * Inserts initial player to match
    * 
    * @param con       Connection
    * @param statement Statement
