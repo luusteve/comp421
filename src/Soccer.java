@@ -53,12 +53,15 @@ public class Soccer {
     Scanner sc = new Scanner(System.in);
     try {
       while (true) {
-        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Insert goal scored\n\t4. Exit application";
+        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Insert goal scored\n\t4. Exit application\nPlease enter your option:";
         String validOptionMsg = "Please choose a valid option:\n\t" + options;
         System.out.println("Soccer Main Menu\n\t" + options);
         if (sc.hasNextInt()) {
           switch (sc.nextInt()) {
             case 1:
+              sc.nextLine();
+              listInformationMatchesOfCountry(statement, sc);
+              break;
             case 2:
               sc.nextLine();
               insertInitialPlayerInformation(con, statement, sc);
@@ -197,6 +200,55 @@ public class Soccer {
    * @param statement Statement
    * @throws SQLException
    */
+  private static void listInformationMatchesOfCountry(Statement statement, Scanner sc) throws SQLException {
+    try {
+      while (true) {
+        String country = sc.nextLine();
+        String querySQL = "SELECT \n" +
+                "  T1.country AS team1_country, \n" +
+                "  T2.country AS team2_country, \n" +
+                "  M.match_date, \n" +
+                "  M.round, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
+                "FROM \n" +
+                "  Ticket T,\n" +
+                "  Team T1 \n" +
+                "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
+                "  JOIN Team T2 ON T1.group_letter < T2.group_letter \n" +
+                "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name\n" +
+                "  JOIN teaminmatch TIM ON TIM.national_association_name = T1.national_association_name OR TIM.national_association_name = T2.national_association_name \n" +
+                "  JOIN Match M ON TIM.mid = M.mid \n" +
+                "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
+                "WHERE \n" +
+                "  (TIM.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
+                "  (TIM.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
+                "GROUP BY \n" +
+                "  T1.country, T2.country, M.match_date, M.round;";
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        while (rs.next()) {
+          StringBuilder sb = new StringBuilder();
+          
+          sb.append(rs.getString(1) + "\t");
+          sb.append(rs.getString(2) + "\t");
+          sb.append(rs.getDate(3).toString() + "\t");
+          sb.append(rs.getString(4) + "\t");
+          sb.append(rs.getInt(5) + "\t");
+          sb.append(rs.getInt(6) + "\t");
+          sb.append(rs.getInt(7) + "\t");
+
+          System.out.println(sb.toString());
+        }
+        break;
+      }
+      
+    }
+    catch (IllegalStateException | NoSuchElementException e) {
+      System.out.println("System.in was closed; exiting");
+    }
+
+  }
   private static void insertInitialPlayerInformation(Connection con, Statement statement, Scanner sc)
       throws SQLException {
     try {
