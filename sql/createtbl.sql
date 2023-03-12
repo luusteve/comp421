@@ -102,7 +102,7 @@ CREATE TABLE Playerplaysin
   pid INT NOT NULL,
   mid INT NOT NULL,
   enter_time INT NOT NULL,
-  exit_time INT NOT NULL,
+  exit_time INT NULL,
   position VARCHAR(255) NOT NULL,
   number_of_yellow_card INT NOT NULL,
   received_red_card BOOLEAN NOT NULL,

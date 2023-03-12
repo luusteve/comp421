@@ -10,7 +10,7 @@
 
 ### List information of matches of a country - (TO BE ASSIGN) - (STATUS)
 
-### Insert initial player information - (TO BE ASSIGN) - (STATUS)
+### Insert initial player information - STEVEN - DONE
 
 ### For you to design - (TO BE ASSIGN) - (STATUS)
 

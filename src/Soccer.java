@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -8,6 +9,8 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Soccer {
+  
+  private final static int maxPlayers = 11;
   public static void main(String[] args) throws SQLException {
     // Unique table names. Either the user supplies a unique identifier as a command
     // line argument, or the program makes one up.
@@ -52,7 +55,7 @@ public class Soccer {
     Scanner sc = new Scanner(System.in);
     try {
       while (true) {
-        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Insert goal scored\n\t4. Exit application";
+        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Insert goal scored\n\t4. Exit application\nPlease enter your option:";
         String validOptionMsg = "Please choose a valid option:\n\t" + options;
         System.out.println("Soccer Main Menu\n\t" + options);
         if (sc.hasNextInt()) {
@@ -60,6 +63,7 @@ public class Soccer {
             case 1:
               sc.nextLine();
               listInformationMatchesOfCountry(statement, sc);
+              break;
             case 2:
               sc.nextLine();
               insertInitialPlayerInformation(con, statement, sc);
@@ -192,7 +196,7 @@ public class Soccer {
   }
 
   /**
-   * Inserts all relevant information for when a Goal is scored
+   * Inserts initial player to match
    * 
    * @param con       Connection
    * @param statement Statement
@@ -200,32 +204,48 @@ public class Soccer {
    */
   private static void listInformationMatchesOfCountry(Statement statement, Scanner sc) throws SQLException {
     try {
-      String country = sc.nextLine();
-      String querySQL = "SELECT \n" +
-              "  T1.country AS team1_country, \n" +
-              "  T2.country AS team2_country, \n" +
-              "  M.match_date, \n" +
-              "  M.round, \n" +
-              "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
-              "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
-              "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
-              "FROM \n" +
-              "  Ticket T,\n" +
-              "  Team T1\n" +
-              "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
-              "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-              "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
-              "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
-              "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
-              "  JOIN Match M ON TIM1.mid = M.mid\n" +
-              "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
-              "WHERE \n" +
-              "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
-              "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
-              "GROUP BY \n" +
-              "  T1.country, T2.country, M.match_date, M.round";
-      System.out.println(querySQL);
-      java.sql.ResultSet rs = statement.executeQuery(querySQL);
+      System.out.println("Input a Country:");
+      while (true) {
+        String country = sc.nextLine();
+        String querySQL = "SELECT \n" +
+                "  T1.country AS team1_country, \n" +
+                "  T2.country AS team2_country, \n" +
+                "  M.match_date, \n" +
+                "  M.round, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
+                "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
+                "FROM \n" +
+                "  Ticket T,\n" +
+                "  Team T1\n" +
+                "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
+                "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
+                "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
+                "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
+                "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
+                "  JOIN Match M ON TIM1.mid = M.mid\n" +
+                "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
+                "WHERE \n" +
+                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
+                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
+                "GROUP BY \n" +
+                "  T1.country, T2.country, M.match_date, M.round";
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        while (rs.next()) {
+          StringBuilder sb = new StringBuilder();
+          
+          sb.append(rs.getString(1) + "\t");
+          sb.append(rs.getString(2) + "\t");
+          sb.append(rs.getDate(3).toString() + "\t");
+          sb.append(rs.getString(4) + "\t");
+          sb.append(rs.getInt(5) + "\t");
+          sb.append(rs.getInt(6) + "\t");
+          sb.append(rs.getInt(7) + "\t");
+
+          System.out.println(sb.toString());
+        }
+        break;
+      }
     }
     catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
@@ -270,12 +290,9 @@ public class Soccer {
 
       }
 
-      
-
-      
-      while(true) {
+      while (true) {
         System.out.println(
-          "Please input the match identifier and for which country the insert should be made or return to main menu [P]");
+            "Please input the match identifier and for which country the insert should be made or return to main menu [P]");
         String input = sc.nextLine();
         if (input.equals("P") || input.equals("p")) {
           System.out.println("\n");
@@ -283,16 +300,108 @@ public class Soccer {
         }
         String[] result = input.split(" ");
         String mid = result[0];
-        String team = "Team " + result[1];
-        System.out.println(mid);
-        System.out.println(team);
 
-      // }
-        
+        String country = result[1];
+        String team = "Team " + country ;
+
+        Map<String, List<List<String>>> teamInfo = getPlayersByTeam(con, statement, team);
+        List<String> pids = teamInfo.get(team).get(0);
+        List<String> names = teamInfo.get(team).get(1);
+        List<String> numbers = teamInfo.get(team).get(2);
+        List<String> positions = teamInfo.get(team).get(3);
+        Map<String, List<List<String>>> playerInfo = new HashMap<>();
+        for (String pid : pids) {
+          playerInfo.putAll(getPlayerInfoWithPidAndMid(con, statement, pid, mid));
+        }
+
+        List<String> nonAssignedPids = new ArrayList<>();
+        Iterator<Map.Entry<String, List<List<String>>>> iterator = playerInfo.entrySet().iterator();
+
+        // Iterate over the HashMap
+        while (iterator.hasNext()) {
+
+          // Get the entry at this iteration
+          Map.Entry<String, List<List<String>>> entry = iterator.next();
+
+          // Check if this key is the required key
+          if (entry.getValue().get(0).isEmpty()) {
+            nonAssignedPids.add(entry.getKey());
+            // Remove this entry from HashMap
+            iterator.remove();
+          }
+        }
+
+        if (pids.isEmpty()) {
+          System.out.println("\nNo player were found in team " + country + " playing for match " + mid);
+          break;
+        }
+
+        System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
+
+        for (Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
+          StringBuilder sb = new StringBuilder();
+          String pid = entry.getKey();
+          int index = pids.indexOf(pid);
+          sb.append("\t" + names.get(index));
+          sb.append("\t" + numbers.get(index));
+          sb.append("\t" + positions.get(index));
+          sb.append("\t from minute: " + entry.getValue().get(0).get(0));
+          sb.append("\t to minute: " + entry.getValue().get(1).get(0));
+          sb.append("\t yellow: " + entry.getValue().get(2).get(0));
+          if (Boolean.parseBoolean(entry.getValue().get(3).get(0))) {
+            sb.append("\t red: 1");
+          } else {
+            sb.append("\t red: 0");
+          }
+          System.out.println(sb.toString());
+        }
+
+        if (!nonAssignedPids.isEmpty()) {
+          System.out.println("\nPossible players not yet selected:");
+
+          for (String pid : nonAssignedPids) {
+
+            StringBuilder sb = new StringBuilder();
+            int index = pids.indexOf(pid);
+            int indexNonAssignedPid = nonAssignedPids.indexOf(pid);
+            sb.append(indexNonAssignedPid + ".\t");
+            sb.append(names.get(index) + "\t");
+            sb.append(numbers.get(index) + "\t");
+            sb.append(positions.get(index) + "\t");
+
+            System.out.println(sb.toString());
+          }
+          if (playerInfo.size() > maxPlayers) {
+            System.out.println("Cannot enter more player, max players of " + maxPlayers + " has been reached\n");
+            break;
+          }
+          while (true) {
+            System.out.println(
+                "\nEnter the number of the player you want to insert or [P] to go to the previous menu.");
+            String scanner = sc.nextLine();
+            if (scanner.equals("P") || scanner.equals("p")) {
+              System.out.println("\n");
+              break;
+            }
+            int index = Integer.parseInt(scanner);
+            if (nonAssignedPids.size() > index && index >= 0) {
+              String pid = nonAssignedPids.get(index);
+
+              index = pids.indexOf(pid);
+
+              String position = positions.get(index);
+              String insertSQL = "INSERT INTO Playerplaysin VALUES ( " + pid + " , " + mid + ", 0, NULL, \'"
+                  + position + "\', 0, 0);";
+              statement.executeUpdate(insertSQL);
+              break;
+            }
+            System.out.println("Player " + scanner + " is not an option.");
+          }
+          break;
+        }
+
       }
-      
 
-      
     } catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
     }
@@ -313,6 +422,63 @@ public class Soccer {
     teamsByMid.put(mid, teams);
 
     return teamsByMid;
+  }
+
+  private static Map<String, List<List<String>>> getPlayersByTeam(Connection con, Statement statement, String team)
+      throws SQLException {
+    String teamInMid = "SELECT DISTINCT P.pid, P.name, P.shirt_number, P.general_position FROM Player AS P WHERE P.national_association_name = \'"
+        + team + "\';";
+    java.sql.ResultSet rs = statement.executeQuery(teamInMid);
+
+    Map<String, List<List<String>>> teamsByMid = new HashMap<>();
+    List<List<String>> teams = new ArrayList<>();
+    List<String> pids = new ArrayList<>();
+    List<String> names = new ArrayList<>();
+    List<String> shirtNumbers = new ArrayList<>();
+    List<String> generalPositions = new ArrayList<>();
+    while (rs.next()) {
+      pids.add(String.valueOf(rs.getInt(1)));
+      names.add(rs.getString(2));
+      shirtNumbers.add(String.valueOf(rs.getInt(3)));
+      generalPositions.add(rs.getString(4));
+    }
+    teams.add(pids);
+    teams.add(names);
+    teams.add(shirtNumbers);
+    teams.add(generalPositions);
+
+    teamsByMid.put(team, teams);
+
+    return teamsByMid;
+  }
+
+  private static Map<String, List<List<String>>> getPlayerInfoWithPidAndMid(Connection con, Statement statement,
+      String pid, String mid) throws SQLException {
+    String playersInMid = "SELECT DISTINCT PPS.enter_time, PPS.exit_time, PPS.number_of_yellow_card, PPS.received_red_card FROM Playerplaysin AS PPS WHERE PPS.mid = \'"
+        + mid + "\' AND PPS.pid = \'" + pid + "\';";
+
+    java.sql.ResultSet rs = statement.executeQuery(playersInMid);
+
+    Map<String, List<List<String>>> playerInfoByMid = new HashMap<>();
+    List<List<String>> playerInfos = new ArrayList<>();
+    List<String> enterTimes = new ArrayList<>();
+    List<String> exitTimes = new ArrayList<>();
+    List<String> numberOfYellowCards = new ArrayList<>();
+    List<String> receivedRedCards = new ArrayList<>();
+    while (rs.next()) {
+      enterTimes.add(String.valueOf(rs.getInt(1)));
+      exitTimes.add(String.valueOf(rs.getInt(2)));
+      numberOfYellowCards.add(String.valueOf(rs.getInt(3)));
+      receivedRedCards.add(String.valueOf(rs.getBoolean(4)));
+    }
+
+    playerInfos.add(enterTimes);
+    playerInfos.add(exitTimes);
+    playerInfos.add(numberOfYellowCards);
+    playerInfos.add(receivedRedCards);
+
+    playerInfoByMid.put(pid, playerInfos);
+    return playerInfoByMid;
   }
 
   /**

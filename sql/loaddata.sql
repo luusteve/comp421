@@ -34,7 +34,7 @@ insert into Team (national_association_name, country, group_letter, url) values 
 insert into Team (national_association_name, country, group_letter, url) values ('Team Italy', 'Italy', 'C', 'italy.com');
 insert into Team (national_association_name, country, group_letter, url) values ('Team Croatia', 'Croatia', 'C', 'croatia.com');
 
-insert into Team (national_association_name, country, group_letter, url) values ('Team South Korea', 'South Korea', 'D', 'southkorea.com');
+insert into Team (national_association_name, country, group_letter, url) values ('Team SouthKorea', 'SouthKorea', 'D', 'southkorea.com');
 insert into Team (national_association_name, country, group_letter, url) values ('Team Japan', 'Japan', 'D', 'japan.com');
 insert into Team (national_association_name, country, group_letter, url) values ('Team Vietnam', 'Vietnam', 'D', 'vietnam.com');
 insert into Team (national_association_name, country, group_letter, url) values ('Team India', 'India', 'D', 'india.com');
@@ -91,7 +91,7 @@ insert into Teaminmatch (national_association_name, mid) values ('Team Italy', '
 insert into Teaminmatch (national_association_name, mid) values ('Team Croatia', '8');
 insert into Teaminmatch (national_association_name, mid) values ('Team Italy', '9');
 insert into Teaminmatch (national_association_name, mid) values ('Team Brasil', '9');
-insert into Teaminmatch (national_association_name, mid) values ('Team South Korea', '10');
+insert into Teaminmatch (national_association_name, mid) values ('Team SouthKorea', '10');
 insert into Teaminmatch (national_association_name, mid) values ('Team Japan', '10');
 insert into Teaminmatch (national_association_name, mid) values ('Team Vietnam', '11');
 insert into Teaminmatch (national_association_name, mid) values ('Team India', '11');
@@ -200,7 +200,7 @@ insert into Coach (pid, name, date_of_birth, role, national_association_name) va
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (17, 'Queenie Benediktsson', '1960-02-05', 'Head Coach', 'Team Italy');
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (18, 'Benson Milnes', '1960-12-27', 'Head Coach', 'Team Croatia');
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (19, 'Chicky Supple', '1981-06-22', 'Assistant Coach', 'Team Croatia');
-insert into Coach (pid, name, date_of_birth, role, national_association_name) values (20, 'Con Dumbelton', '1965-09-06', 'Head Coach', 'Team South Korea');
+insert into Coach (pid, name, date_of_birth, role, national_association_name) values (20, 'Con Dumbelton', '1965-09-06', 'Head Coach', 'Team SouthKorea');
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (21, 'Helen Adriani', '1961-05-03', 'Head Coach', 'Team Japan');
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (22, 'Marlo Clarage', '1989-02-21', 'Assistant Coach', 'Team Japan');
 insert into Coach (pid, name, date_of_birth, role, national_association_name) values (23, 'Peri Maker', '1984-07-28', 'Head Coach', 'Team Vietnam');
@@ -256,10 +256,10 @@ insert into Player (pid, name, general_position, date_of_birth, shirt_number, na
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (46, 'Petronella Hanhard', 'Goalkeeper', '1984-10-30', 6, 'Team Croatia');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (47, 'Gerhard Nisbith', 'Forward', '1999-08-02', 3, 'Team Croatia');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (48, 'Con Over', 'Striker', '1993-08-15', 2, 'Team Croatia');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (49, 'Junie Peeter', 'Midfielder', '1992-01-16', 1, 'Team South Korea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (50, 'Petronella Spurrior', 'Goalkeeper', '1990-04-19', 11, 'Team South Korea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (51, 'Jane Doe', 'Defender', '1981-02-12', 11, 'Team South Korea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (52, 'Hughie Le Grove', 'Striker', '1991-06-29', 8, 'Team South Korea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (49, 'Junie Peeter', 'Midfielder', '1992-01-16', 1, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (50, 'Petronella Spurrior', 'Goalkeeper', '1990-04-19', 9, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (51, 'Jane Doe', 'Defender', '1981-02-12', 11, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (52, 'Hughie Le Grove', 'Striker', '1991-06-29', 8, 'Team SouthKorea');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (53, 'Ellene Riddeough', 'Goalkeeper', '1997-05-02', 1, 'Team Japan');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (54, 'Kennett Laverick', 'Striker', '1997-10-14', 2, 'Team Japan');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (55, 'Pooh Capun', 'Striker', '1988-08-19', 3, 'Team Japan');
@@ -272,6 +272,10 @@ insert into Player (pid, name, general_position, date_of_birth, shirt_number, na
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (62, 'Kassie Abrahamian', 'Striker', '1998-12-31', 3, 'Team India');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (63, 'Sherwood Harberer', 'Goalkeeper', '1990-12-07', 8, 'Team India');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (64, 'Raffaella Farnon', 'Midfielder', '1992-11-10', 4, 'Team India');
+
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (65, 'Kim Sye', 'Midfielder', '1993-06-23', 2, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (66, 'Xie Po', 'Striker', '1988-07-11', 3, 'Team SouthKorea');
+
 
 ------------------------------------   Goal   ------------------------------------
 
@@ -465,7 +469,7 @@ insert into Referee (pid, name, date_of_birth, years_of_experience, country) val
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (38, 'Gussi Cheverton', '1973-01-02', 4, 'Indonesia');
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (39, 'Fairlie Biesinger', '1983-12-25', 14, 'Yemen');
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (40, 'Nonah Farnorth', '1976-04-17', 5, 'Sweden');
-insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (41, 'Emmy Itzcak', '1970-08-18', 4, 'South Korea');
+insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (41, 'Emmy Itzcak', '1970-08-18', 4, 'SouthKorea');
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (42, 'Al Lukash', '1973-11-08', 6, 'Brazil');
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (43, 'Bebe Fancet', '1988-11-28', 5, 'Cyprus');
 insert into Referee (pid, name, date_of_birth, years_of_experience, country) values (44, 'Drucy Sperry', '1974-03-26', 8, 'Philippines');
