@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -245,7 +246,7 @@ public class Soccer {
         String[] result = input.split(" ");
         String mid = result[0];
 
-        System.out.println("The following players from " + result[1] + " are already entered for match " + mid);
+        System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
 
         String team = "Team " + result[1];
 
@@ -253,17 +254,36 @@ public class Soccer {
         List<String> pids = teamInfo.get(team).get(0);
         List<String> names = teamInfo.get(team).get(1);
         List<String> numbers = teamInfo.get(team).get(2);
+        List<String> positions = teamInfo.get(team).get(3);
         Map<String, List<List<String>>> playerInfo = new HashMap<>();
         for (String pid : pids) {
           playerInfo.putAll(getPlayerInfoWithPidAndMid(con, statement, pid, mid));
         }
 
-        for(Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
+        List<String> nonAssignedPids = new ArrayList<>();
+        Iterator<Map.Entry<String, List<List<String>>>> iterator = playerInfo.entrySet().iterator();
+
+        // Iterate over the HashMap
+        while (iterator.hasNext()) {
+
+          // Get the entry at this iteration
+          Map.Entry<String, List<List<String>>> entry = iterator.next();
+
+          // Check if this key is the required key
+          if (entry.getValue().get(0).isEmpty()) {
+            nonAssignedPids.add(entry.getKey());
+            // Remove this entry from HashMap
+            iterator.remove();
+          }
+        }
+
+        for (Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
           StringBuilder sb = new StringBuilder();
           String pid = entry.getKey();
           int index = pids.indexOf(pid);
           sb.append("\t" + names.get(index));
           sb.append("\t" + numbers.get(index));
+          sb.append("\t" + positions.get(index));
           sb.append("\t from minute: " + entry.getValue().get(0).get(0));
           sb.append("\t to minute: " + entry.getValue().get(1).get(0));
           sb.append("\t yellow: " + entry.getValue().get(2).get(0));
@@ -274,7 +294,42 @@ public class Soccer {
           }
           System.out.println(sb.toString());
         }
-       
+
+        if (!nonAssignedPids.isEmpty()) {
+          System.out.println("\nPossible players not yet selected:");
+
+          for (String pid : nonAssignedPids) {
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(pid + ".\t");
+            int index = pids.indexOf(pid);
+            sb.append(names.get(index) + "\t");
+            sb.append(numbers.get(index) + "\t");
+            sb.append(positions.get(index) + "\t");
+
+            System.out.println(sb.toString());
+          }
+          while (true) {
+            System.out.println(
+                "\nEnter the number of the player you want to insert or [P] to go to the previous menu.");
+            String scanner = sc.nextLine();
+            if (input.equals("P") || input.equals("p")) {
+              System.out.println("\n");
+              break;
+            }
+            if (!nonAssignedPids.contains(scanner)) {
+              int index = pids.indexOf(scanner);
+              String position = positions.get(index);
+              String insertSQL = "INSERT INTO Playerplaysin VALUES ( " + scanner + " , " + mid + ", 0, NULL, \'"
+                  + position + "\', 0, 0);";
+              statement.executeUpdate(insertSQL);
+              break;
+            }
+            System.out.println("Player with pid: " + scanner + "does not belong in this team or match");
+          }
+          break;
+        }
+
       }
 
     } catch (IllegalStateException | NoSuchElementException e) {
