@@ -8,14 +8,14 @@
 
 ### Exit application - STEVEN - DONE
 
-### List information of matches of a country - (TO BE ASSIGN) - (STATUS)
+### List information of matches of a country - Robert - InProgress
 
 ### Insert initial player information - STEVEN - DONE
 
-### For you to design - (TO BE ASSIGN) - (STATUS)
+### For you to design - Robert - InProgress
 
 * (a) [10 pt] - (TO BE ASSIGN) - (STATUS)
-* (b) [40 pt] - (TO BE ASSIGN) - (STATUS)
+* (b) [40 pt] - STEVEN - INPROGRESS
 * (c) [30 pt] - (TO BE ASSIGN) - (STATUS)
 
 ## 4. [5 pt] (TO BE ASSIGN) - (STATUS)
