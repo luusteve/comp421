@@ -202,6 +202,7 @@ public class Soccer {
    */
   private static void listInformationMatchesOfCountry(Statement statement, Scanner sc) throws SQLException {
     try {
+      System.out.println("Input a Country:");
       while (true) {
         String country = sc.nextLine();
         String querySQL = "SELECT \n" +
@@ -353,8 +354,9 @@ public class Soccer {
           for (String pid : nonAssignedPids) {
 
             StringBuilder sb = new StringBuilder();
-            sb.append(pid + ".\t");
             int index = pids.indexOf(pid);
+            int indexNonAssignedPid = nonAssignedPids.indexOf(pid);
+            sb.append(indexNonAssignedPid + ".\t");
             sb.append(names.get(index) + "\t");
             sb.append(numbers.get(index) + "\t");
             sb.append(positions.get(index) + "\t");
@@ -369,15 +371,19 @@ public class Soccer {
               System.out.println("\n");
               break;
             }
-            if (!nonAssignedPids.contains(scanner)) {
-              int index = pids.indexOf(scanner);
+            int index = Integer.parseInt(scanner);
+            if (nonAssignedPids.size() > index && index >= 0) {
+              String pid = nonAssignedPids.get(index);
+              
+              index = pids.indexOf(pid);
+
               String position = positions.get(index);
-              String insertSQL = "INSERT INTO Playerplaysin VALUES ( " + scanner + " , " + mid + ", 0, NULL, \'"
+              String insertSQL = "INSERT INTO Playerplaysin VALUES ( " + pid + " , " + mid + ", 0, NULL, \'"
                   + position + "\', 0, 0);";
               statement.executeUpdate(insertSQL);
               break;
             }
-            System.out.println("Player with pid: " + scanner + "does not belong in this team or match");
+            System.out.println("Player " + scanner + " is not an option.");
           }
           break;
         }
