@@ -8,7 +8,7 @@
 
 ### Exit application - STEVEN - DONE
 
-### List information of matches of a country - Robert - InProgress
+### List information of matches of a country - Robert - DONE
 
 ### Insert initial player information - STEVEN - DONE
 
