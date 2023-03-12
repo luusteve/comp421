@@ -234,12 +234,9 @@ public class Soccer {
 
       }
 
-      
-
-      
-      while(true) {
+      while (true) {
         System.out.println(
-          "Please input the match identifier and for which country the insert should be made or return to main menu [P]");
+            "Please input the match identifier and for which country the insert should be made or return to main menu [P]");
         String input = sc.nextLine();
         if (input.equals("P") || input.equals("p")) {
           System.out.println("\n");
@@ -247,16 +244,39 @@ public class Soccer {
         }
         String[] result = input.split(" ");
         String mid = result[0];
+
+        System.out.println("The following players from " + result[1] + " are already entered for match " + mid);
+
         String team = "Team " + result[1];
-        System.out.println(mid);
-        System.out.println(team);
 
-      // }
-        
+        Map<String, List<List<String>>> teamInfo = getPlayersByTeam(con, statement, team);
+        List<String> pids = teamInfo.get(team).get(0);
+        List<String> names = teamInfo.get(team).get(1);
+        List<String> numbers = teamInfo.get(team).get(2);
+        Map<String, List<List<String>>> playerInfo = new HashMap<>();
+        for (String pid : pids) {
+          playerInfo.putAll(getPlayerInfoWithPidAndMid(con, statement, pid, mid));
+        }
+
+        for(Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
+          StringBuilder sb = new StringBuilder();
+          String pid = entry.getKey();
+          int index = pids.indexOf(pid);
+          sb.append("\t" + names.get(index));
+          sb.append("\t" + numbers.get(index));
+          sb.append("\t from minute: " + entry.getValue().get(0).get(0));
+          sb.append("\t to minute: " + entry.getValue().get(1).get(0));
+          sb.append("\t yellow: " + entry.getValue().get(2).get(0));
+          if (Boolean.parseBoolean(entry.getValue().get(3).get(0))) {
+            sb.append("\t red: 1");
+          } else {
+            sb.append("\t red: 0");
+          }
+          System.out.println(sb.toString());
+        }
+       
       }
-      
 
-      
     } catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
     }
@@ -277,6 +297,63 @@ public class Soccer {
     teamsByMid.put(mid, teams);
 
     return teamsByMid;
+  }
+
+  private static Map<String, List<List<String>>> getPlayersByTeam(Connection con, Statement statement, String team)
+      throws SQLException {
+    String teamInMid = "SELECT DISTINCT P.pid, P.name, P.shirt_number, P.general_position FROM Player AS P WHERE P.national_association_name = \'"
+        + team + "\';";
+    java.sql.ResultSet rs = statement.executeQuery(teamInMid);
+
+    Map<String, List<List<String>>> teamsByMid = new HashMap<>();
+    List<List<String>> teams = new ArrayList<>();
+    List<String> pids = new ArrayList<>();
+    List<String> names = new ArrayList<>();
+    List<String> shirtNumbers = new ArrayList<>();
+    List<String> generalPositions = new ArrayList<>();
+    while (rs.next()) {
+      pids.add(String.valueOf(rs.getInt(1)));
+      names.add(rs.getString(2));
+      shirtNumbers.add(String.valueOf(rs.getInt(3)));
+      generalPositions.add(rs.getString(4));
+    }
+    teams.add(pids);
+    teams.add(names);
+    teams.add(shirtNumbers);
+    teams.add(generalPositions);
+
+    teamsByMid.put(team, teams);
+
+    return teamsByMid;
+  }
+
+  private static Map<String, List<List<String>>> getPlayerInfoWithPidAndMid(Connection con, Statement statement,
+      String pid, String mid) throws SQLException {
+    String playersInMid = "SELECT DISTINCT PPS.enter_time, PPS.exit_time, PPS.number_of_yellow_card, PPS.received_red_card FROM Playerplaysin AS PPS WHERE PPS.mid = \'"
+        + mid + "\' AND PPS.pid = \'" + pid + "\';";
+
+    java.sql.ResultSet rs = statement.executeQuery(playersInMid);
+
+    Map<String, List<List<String>>> playerInfoByMid = new HashMap<>();
+    List<List<String>> playerInfos = new ArrayList<>();
+    List<String> enterTimes = new ArrayList<>();
+    List<String> exitTimes = new ArrayList<>();
+    List<String> numberOfYellowCards = new ArrayList<>();
+    List<String> receivedRedCards = new ArrayList<>();
+    while (rs.next()) {
+      enterTimes.add(String.valueOf(rs.getInt(1)));
+      exitTimes.add(String.valueOf(rs.getInt(2)));
+      numberOfYellowCards.add(String.valueOf(rs.getInt(3)));
+      receivedRedCards.add(String.valueOf(rs.getBoolean(4)));
+    }
+
+    playerInfos.add(enterTimes);
+    playerInfos.add(exitTimes);
+    playerInfos.add(numberOfYellowCards);
+    playerInfos.add(receivedRedCards);
+
+    playerInfoByMid.put(pid, playerInfos);
+    return playerInfoByMid;
   }
 
   /**
