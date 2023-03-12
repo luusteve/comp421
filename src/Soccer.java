@@ -58,7 +58,7 @@ public class Soccer {
         if (sc.hasNextInt()) {
           switch (sc.nextInt()) {
             case 1:
-              sc.nextInt();
+              sc.nextLine();
               listInformationMatchesOfCountry(statement, sc);
             case 2:
               sc.nextLine();
@@ -199,31 +199,37 @@ public class Soccer {
    * @throws SQLException
    */
   private static void listInformationMatchesOfCountry(Statement statement, Scanner sc) throws SQLException {
-    String country = sc.next();
-    String querySQL = "SELECT \n" +
-            "  T1.country AS team1_country, \n" +
-            "  T2.country AS team2_country, \n" +
-            "  M.match_date, \n" +
-            "  M.round, \n" +
-            "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
-            "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
-            "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
-            "FROM \n" +
-            "  Ticket T,\n" +
-            "  Team T1 \n" +
-            "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-            "  JOIN Team T2 ON T1.group_letter < T2.group_letter \n" +
-            "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name\n" +
-            "  JOIN teaminmatch TIM ON TIM.national_association_name = T1.national_association_name OR TIM.national_association_name = T2.national_association_name \n" +
-            "  JOIN Match M ON TIM.mid = M.mid \n" +
-            "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
-            "WHERE \n" +
-            "  (TIM.national_association_name = T1.national_association_name AND T2.country = '"+ country + "') OR \n" +
-            "  (TIM.national_association_name = T2.national_association_name AND T1.country = '"+ country + "')\n" +
-            "GROUP BY \n" +
-            "  T1.country, T2.country, M.match_date, M.round;";
-    System.out.println ("This is the query:" + querySQL) ;
-    java.sql.ResultSet rs = statement.executeQuery ( querySQL ) ;
+    try {
+      String country = sc.nextLine();
+      String querySQL = "SELECT \n" +
+              "  T1.country AS team1_country, \n" +
+              "  T2.country AS team2_country, \n" +
+              "  M.match_date, \n" +
+              "  M.round, \n" +
+              "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
+              "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
+              "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
+              "FROM \n" +
+              "  Ticket T,\n" +
+              "  Team T1 \n" +
+              "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
+              "  JOIN Team T2 ON T1.group_letter < T2.group_letter \n" +
+              "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name\n" +
+              "  JOIN teaminmatch TIM ON TIM.national_association_name = T1.national_association_name OR TIM.national_association_name = T2.national_association_name \n" +
+              "  JOIN Match M ON TIM.mid = M.mid \n" +
+              "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
+              "WHERE \n" +
+              "  (TIM.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
+              "  (TIM.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
+              "GROUP BY \n" +
+              "  T1.country, T2.country, M.match_date, M.round;";
+      System.out.println(querySQL);
+      java.sql.ResultSet rs = statement.executeQuery(querySQL);
+    }
+    catch (IllegalStateException | NoSuchElementException e) {
+      System.out.println("System.in was closed; exiting");
+    }
+
   }
   private static void insertInitialPlayerInformation(Connection con, Statement statement, Scanner sc)
       throws SQLException {
