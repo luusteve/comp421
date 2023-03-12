@@ -40,6 +40,8 @@ CREATE TABLE Match
   match_time TIME NOT NULL,
   match_length INT NOT NULL,
   stadium_name VARCHAR(255) NOT NULL,
+  round VARCHAR(255) NOT NULL,
+  seats_sold INT NOT NULL,
   PRIMARY KEY(mid),
   FOREIGN KEY(stadium_name) REFERENCES Stadium(stadium_name)
 );
