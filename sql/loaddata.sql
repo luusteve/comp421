@@ -256,10 +256,6 @@ insert into Player (pid, name, general_position, date_of_birth, shirt_number, na
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (46, 'Petronella Hanhard', 'Goalkeeper', '1984-10-30', 6, 'Team Croatia');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (47, 'Gerhard Nisbith', 'Forward', '1999-08-02', 3, 'Team Croatia');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (48, 'Con Over', 'Striker', '1993-08-15', 2, 'Team Croatia');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (49, 'Junie Peeter', 'Midfielder', '1992-01-16', 1, 'Team SouthKorea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (50, 'Petronella Spurrior', 'Goalkeeper', '1990-04-19', 9, 'Team SouthKorea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (51, 'Jane Doe', 'Defender', '1981-02-12', 11, 'Team SouthKorea');
-insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (52, 'Hughie Le Grove', 'Striker', '1991-06-29', 8, 'Team SouthKorea');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (53, 'Ellene Riddeough', 'Goalkeeper', '1997-05-02', 1, 'Team Japan');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (54, 'Kennett Laverick', 'Striker', '1997-10-14', 2, 'Team Japan');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (55, 'Pooh Capun', 'Striker', '1988-08-19', 3, 'Team Japan');
@@ -273,6 +269,10 @@ insert into Player (pid, name, general_position, date_of_birth, shirt_number, na
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (63, 'Sherwood Harberer', 'Goalkeeper', '1990-12-07', 8, 'Team India');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (64, 'Raffaella Farnon', 'Midfielder', '1992-11-10', 4, 'Team India');
 
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (49, 'Junie Peeter', 'Midfielder', '1992-01-16', 1, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (50, 'Petronella Spurrior', 'Goalkeeper', '1990-04-19', 9, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (51, 'Jane Doe', 'Defender', '1981-02-12', 11, 'Team SouthKorea');
+insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (52, 'Hughie Le Grove', 'Striker', '1991-06-29', 8, 'Team SouthKorea');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (65, 'Kim Sye', 'Midfielder', '1993-06-23', 2, 'Team SouthKorea');
 insert into Player (pid, name, general_position, date_of_birth, shirt_number, national_association_name) values (66, 'Xie Po', 'Striker', '1988-07-11', 3, 'Team SouthKorea');
 
@@ -360,10 +360,12 @@ insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (46, 8, 21, 88, 'Forward', 2, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (47, 8, 17, 87, 'Goalkeeper', 0, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (48, 8, 41, 79, 'Striker', 2, false);
+
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (49, 10, 31, 53, 'Midfielder', 0, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (50, 10, 23, 79, 'Defender', 0, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (51, 10, 29, 86, 'Striker', 1, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (52, 10, 38, 50, 'Striker', 1, false);
+
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (53, 10, 23, 59, 'Striker', 1, true);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (54, 10, 34, 61, 'Goalkeeper', 2, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (55, 10, 38, 77, 'Defender', 1, false);
