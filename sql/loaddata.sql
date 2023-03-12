@@ -64,7 +64,7 @@ insert into Match (mid, match_date, match_time, match_length, stadium_name) valu
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (8, '2023-03-26', '19:08', '92', 'Marvin Center');
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (9, '2023-03-29', '23:34', '94', 'Marvin Center');
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (10, '2023-05-30', '2:56', '105', 'Terrel Center');
-insert into Match (mid, match_date, match_time, match_length, stadium_name) values (11, '2023-03-20', '1:56', '99', 'Terrel Center');
+insert into Match (mid, match_date, match_time, match_length, stadium_name) values (11, '2023-03-12', '1:56', '99', 'Terrel Center');
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (12, '2023-08-30', '1:50', '96', 'Terrel Center');
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (13, '2023-06-16', '15:51', '96', 'Edlin Center');
 insert into Match (mid, match_date, match_time, match_length, stadium_name) values (14, '2023-05-26', '14:28', '110', 'Winn Center');
