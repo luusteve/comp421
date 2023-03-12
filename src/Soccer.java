@@ -9,6 +9,8 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Soccer {
+  
+  private final static int maxPlayers = 11;
   public static void main(String[] args) throws SQLException {
     // Unique table names. Either the user supplies a unique identifier as a command
     // line argument, or the program makes one up.
@@ -363,6 +365,10 @@ public class Soccer {
 
             System.out.println(sb.toString());
           }
+          if (playerInfo.size() > maxPlayers) {
+            System.out.println("Cannot enter more player, max players of " + maxPlayers + " has been reached\n");
+            break;
+          }
           while (true) {
             System.out.println(
                 "\nEnter the number of the player you want to insert or [P] to go to the previous menu.");
@@ -374,7 +380,7 @@ public class Soccer {
             int index = Integer.parseInt(scanner);
             if (nonAssignedPids.size() > index && index >= 0) {
               String pid = nonAssignedPids.get(index);
-              
+
               index = pids.indexOf(pid);
 
               String position = positions.get(index);
