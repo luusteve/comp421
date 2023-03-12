@@ -1,16 +1,19 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Soccer {
-  
+
   private final static int maxPlayers = 11;
+
   public static void main(String[] args) throws SQLException {
     // Unique table names. Either the user supplies a unique identifier as a command
     // line argument, or the program makes one up.
@@ -204,54 +207,66 @@ public class Soccer {
    */
   private static void listInformationMatchesOfCountry(Statement statement, Scanner sc) throws SQLException {
     try {
-      System.out.println("Input a Country:");
       while (true) {
+        System.out.println(
+            "\nPlease input a Country or return to main menu [P]");
         String country = sc.nextLine();
-        String querySQL = "SELECT \n" +
-                "  T1.country AS team1_country, \n" +
-                "  T2.country AS team2_country, \n" +
-                "  M.match_date, \n" +
-                "  M.round, \n" +
-                "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
-                "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
-                "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold\n" +
-                "FROM \n" +
-                "  Ticket T,\n" +
-                "  Team T1\n" +
-                "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
-                "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-                "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
-                "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
-                "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
-                "  JOIN Match M ON TIM1.mid = M.mid\n" +
-                "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
-                "WHERE \n" +
-                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
-                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
-                "GROUP BY \n" +
-                "  T1.country, T2.country, M.match_date, M.round";
-        java.sql.ResultSet rs = statement.executeQuery(querySQL);
-        while (rs.next()) {
-          StringBuilder sb = new StringBuilder();
-          
-          sb.append(rs.getString(1) + "\t");
-          sb.append(rs.getString(2) + "\t");
-          sb.append(rs.getDate(3).toString() + "\t");
-          sb.append(rs.getString(4) + "\t");
-          sb.append(rs.getInt(5) + "\t");
-          sb.append(rs.getInt(6) + "\t");
-          sb.append(rs.getInt(7) + "\t");
-
-          System.out.println(sb.toString());
+        if (country.equals("P") || country.equals("p")) {
+          System.out.println("\n");
+          break;
         }
-        break;
+        String querySQL = "SELECT \n" +
+            "  T1.country AS team1_country, \n" +
+            "  T2.country AS team2_country, \n" +
+            "  M.match_date, \n" +
+            "  M.round, \n" +
+            "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
+            "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
+            "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold, \n" +
+            "  M.mid AS match_id\n" +
+            "FROM \n" +
+            "  Ticket T,\n" +
+            "  Team T1\n" +
+            "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
+            "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
+            "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
+            "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
+            "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n"
+            +
+            "  JOIN Match M ON TIM1.mid = M.mid\n" +
+            "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
+            "WHERE \n" +
+            "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n"
+            +
+            "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "')\n" +
+            "GROUP BY \n" +
+            "  T1.country, T2.country, M.match_date, M.round, M.mid";
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        Set<Integer> mids = new HashSet<>();
+        while (rs.next()) {
+          if (!mids.contains(rs.getInt(8))) {
+            mids.add(rs.getInt(8));
+
+            StringBuilder sb = new StringBuilder();
+  
+            sb.append(rs.getString(1) + "\t");
+            sb.append(rs.getString(2) + "\t");
+            sb.append(rs.getDate(3).toString() + "\t");
+            sb.append(rs.getString(4) + "\t");
+            sb.append(rs.getInt(5) + "\t");
+            sb.append(rs.getInt(6) + "\t");
+            sb.append(rs.getInt(7) + "\t");
+  
+            System.out.println(sb.toString());
+          }
+        }
       }
-    }
-    catch (IllegalStateException | NoSuchElementException e) {
+    } catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
     }
 
   }
+
   private static void insertInitialPlayerInformation(Connection con, Statement statement, Scanner sc)
       throws SQLException {
     try {
@@ -302,7 +317,7 @@ public class Soccer {
         String mid = result[0];
 
         String country = result[1];
-        String team = "Team " + country ;
+        String team = "Team " + country;
 
         Map<String, List<List<String>>> teamInfo = getPlayersByTeam(con, statement, team);
         List<String> pids = teamInfo.get(team).get(0);
