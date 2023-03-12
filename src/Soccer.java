@@ -301,9 +301,8 @@ public class Soccer {
         String[] result = input.split(" ");
         String mid = result[0];
 
-        System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
-
-        String team = "Team " + result[1];
+        String country = result[1];
+        String team = "Team " + country ;
 
         Map<String, List<List<String>>> teamInfo = getPlayersByTeam(con, statement, team);
         List<String> pids = teamInfo.get(team).get(0);
@@ -331,6 +330,13 @@ public class Soccer {
             iterator.remove();
           }
         }
+
+        if (pids.isEmpty()) {
+          System.out.println("\nNo player were found in team " + country + " playing for match " + mid);
+          break;
+        }
+
+        System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
 
         for (Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
           StringBuilder sb = new StringBuilder();
@@ -373,7 +379,7 @@ public class Soccer {
             System.out.println(
                 "\nEnter the number of the player you want to insert or [P] to go to the previous menu.");
             String scanner = sc.nextLine();
-            if (input.equals("P") || input.equals("p")) {
+            if (scanner.equals("P") || scanner.equals("p")) {
               System.out.println("\n");
               break;
             }
