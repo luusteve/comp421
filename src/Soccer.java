@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 
 public class Soccer {
 
-  private final static int maxPlayers = 11;
+  private final static int maxPlayers = 2;
 
   public static void main(String[] args) throws SQLException {
     // Unique table names. Either the user supplies a unique identifier as a command
@@ -175,10 +175,12 @@ public class Soccer {
     return count;
   }
 
-  private static int getCountGoalsByPlayersInTeam(Statement statement, List<String> pids, String mid) throws SQLException {
+  private static int getCountGoalsByPlayersInTeam(Statement statement, List<String> pids, String mid)
+      throws SQLException {
     int count = 0;
     for (String pid : pids) {
-      String querySQL = "SELECT COUNT(CASE WHEN PS.pid = " + pid + " THEN 1 END) FROM Playerscored PS WHERE PS.mid =" + mid + ";";
+      String querySQL = "SELECT COUNT(CASE WHEN PS.pid = " + pid + " THEN 1 END) FROM Playerscored PS WHERE PS.mid ="
+          + mid + ";";
 
       java.sql.ResultSet rs = statement.executeQuery(querySQL);
 
@@ -272,16 +274,18 @@ public class Soccer {
       throws SQLException {
     try {
 
-      String querySQL = "SELECT M.mid, M.match_date FROM Match AS M WHERE M.match_date >= (CURRENT DATE) AND M.match_date <= (CURRENT DATE +3 DAY);";
+      String querySQL = "SELECT M.mid, M.match_date, M.round FROM Match AS M WHERE M.match_date >= (CURRENT DATE) AND M.match_date <= (CURRENT DATE +3 DAY);";
 
       java.sql.ResultSet rs = statement.executeQuery(querySQL);
 
       Map<String, Date> midAndDates = new HashMap<>();
+      Map<String, String> midAndRounds = new HashMap<>();
 
       System.out.println("Matches in the next 3 days:\n");
       while (rs.next()) {
         // mid and dates
         midAndDates.put(rs.getString(1), rs.getDate(2));
+        midAndRounds.put(rs.getString(1), rs.getString(3));
       }
 
       for (Map.Entry<String, Date> entry : midAndDates.entrySet()) {
@@ -301,6 +305,7 @@ public class Soccer {
           sb.append(teamsByMid.get(mid).get(0) + "\t");
           sb.append(teamsByMid.get(mid).get(1) + "\t");
           sb.append(entry.getValue().toString() + "\t");
+          sb.append(midAndRounds.get(entry.getKey()) + "\t");
           System.out.println(sb.toString() + "\n");
         }
 
@@ -320,78 +325,80 @@ public class Soccer {
         String country = result[1];
         String team = "Team " + country;
 
-        Map<String, List<List<String>>> teamInfo = getPlayersByTeam(statement, team);
-        List<String> pids = teamInfo.get(team).get(0);
-        List<String> names = teamInfo.get(team).get(1);
-        List<String> numbers = teamInfo.get(team).get(2);
-        List<String> positions = teamInfo.get(team).get(3);
-        Map<String, List<List<String>>> playerInfo = new HashMap<>();
-        for (String pid : pids) {
-          playerInfo.putAll(getPlayerInfoWithPidAndMid(statement, pid, mid));
-        }
+        while (true) {
 
-        List<String> nonAssignedPids = new ArrayList<>();
-        Iterator<Map.Entry<String, List<List<String>>>> iterator = playerInfo.entrySet().iterator();
-
-        // Iterate over the HashMap
-        while (iterator.hasNext()) {
-
-          // Get the entry at this iteration
-          Map.Entry<String, List<List<String>>> entry = iterator.next();
-
-          // Check if this key is the required key
-          if (entry.getValue().get(0).isEmpty()) {
-            nonAssignedPids.add(entry.getKey());
-            // Remove this entry from HashMap
-            iterator.remove();
+          Map<String, List<List<String>>> teamInfo = getPlayersByTeam(statement, team);
+          List<String> pids = teamInfo.get(team).get(0);
+          List<String> names = teamInfo.get(team).get(1);
+          List<String> numbers = teamInfo.get(team).get(2);
+          List<String> positions = teamInfo.get(team).get(3);
+          Map<String, List<List<String>>> playerInfo = new HashMap<>();
+          for (String pid : pids) {
+            playerInfo.putAll(getPlayerInfoWithPidAndMid(statement, pid, mid));
           }
-        }
 
-        if (pids.isEmpty()) {
-          System.out.println("\nNo player were found in team " + country + " playing for match " + mid);
-          break;
-        }
+          List<String> nonAssignedPids = new ArrayList<>();
+          Iterator<Map.Entry<String, List<List<String>>>> iterator = playerInfo.entrySet().iterator();
 
-        System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
+          // Iterate over the HashMap
+          while (iterator.hasNext()) {
 
-        for (Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
-          StringBuilder sb = new StringBuilder();
-          String pid = entry.getKey();
-          int index = pids.indexOf(pid);
-          sb.append("\t" + names.get(index));
-          sb.append("\t" + numbers.get(index));
-          sb.append("\t" + positions.get(index));
-          sb.append("\t from minute: " + entry.getValue().get(0).get(0));
-          sb.append("\t to minute: " + entry.getValue().get(1).get(0));
-          sb.append("\t yellow: " + entry.getValue().get(2).get(0));
-          if (Boolean.parseBoolean(entry.getValue().get(3).get(0))) {
-            sb.append("\t red: 1");
-          } else {
-            sb.append("\t red: 0");
+            // Get the entry at this iteration
+            Map.Entry<String, List<List<String>>> entry = iterator.next();
+
+            // Check if this key is the required key
+            if (entry.getValue().get(0).isEmpty()) {
+              nonAssignedPids.add(entry.getKey());
+              // Remove this entry from HashMap
+              iterator.remove();
+            }
           }
-          System.out.println(sb.toString());
-        }
 
-        if (!nonAssignedPids.isEmpty()) {
-          System.out.println("\nPossible players not yet selected:");
-
-          for (String pid : nonAssignedPids) {
-
-            StringBuilder sb = new StringBuilder();
-            int index = pids.indexOf(pid);
-            int indexNonAssignedPid = nonAssignedPids.indexOf(pid);
-            sb.append(indexNonAssignedPid + ".\t");
-            sb.append(names.get(index) + "\t");
-            sb.append(numbers.get(index) + "\t");
-            sb.append(positions.get(index) + "\t");
-
-            System.out.println(sb.toString());
-          }
-          if (playerInfo.size() > maxPlayers) {
-            System.out.println("Cannot enter more player, max players of " + maxPlayers + " has been reached\n");
+          if (pids.isEmpty()) {
+            System.out.println("\nNo player were found in team " + country + " playing for match " + mid);
             break;
           }
-          while (true) {
+
+          System.out.println("\nThe following players from " + result[1] + " are already entered for match " + mid);
+
+          for (Map.Entry<String, List<List<String>>> entry : playerInfo.entrySet()) {
+            StringBuilder sb = new StringBuilder();
+            String pid = entry.getKey();
+            int index = pids.indexOf(pid);
+            sb.append("\t" + names.get(index));
+            sb.append("\t" + numbers.get(index));
+            sb.append("\t" + positions.get(index));
+            sb.append("\t from minute: " + entry.getValue().get(0).get(0));
+            sb.append("\t to minute: " + entry.getValue().get(1).get(0));
+            sb.append("\t yellow: " + entry.getValue().get(2).get(0));
+            if (Boolean.parseBoolean(entry.getValue().get(3).get(0))) {
+              sb.append("\t red: 1");
+            } else {
+              sb.append("\t red: 0");
+            }
+            System.out.println(sb.toString());
+          }
+
+          if (!nonAssignedPids.isEmpty()) {
+            System.out.println("\nPossible players not yet selected:");
+
+            for (String pid : nonAssignedPids) {
+
+              StringBuilder sb = new StringBuilder();
+              int index = pids.indexOf(pid);
+              int indexNonAssignedPid = nonAssignedPids.indexOf(pid);
+              sb.append(indexNonAssignedPid + ".\t");
+              sb.append(names.get(index) + "\t");
+              sb.append(numbers.get(index) + "\t");
+              sb.append(positions.get(index) + "\t");
+
+              System.out.println(sb.toString());
+            }
+            if (playerInfo.size() >= maxPlayers) {
+              System.out.println("Cannot enter more player, max players of " + maxPlayers + " please select a different match and country\n");
+              break;
+            }
+
             System.out.println(
                 "\nEnter the number of the player you want to insert or [P] to go to the previous menu.");
             String scanner = sc.nextLine();
@@ -409,11 +416,11 @@ public class Soccer {
               String insertSQL = "INSERT INTO Playerplaysin VALUES ( " + pid + " , " + mid + ", 0, NULL, \'"
                   + position + "\', 0, 0);";
               statement.executeUpdate(insertSQL);
-              break;
+              System.out.println("Succesfully added " + names.get(index) + " to match " + mid);
+            }else {
+              System.out.println("Player " + scanner + " is not an option.");
             }
-            System.out.println("Player " + scanner + " is not an option.");
           }
-          break;
         }
 
       }

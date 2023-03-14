@@ -1,1 +1,1 @@
-CREATE UNIQUE INDEX player_index ON Player(pid) INCLUDE (name);
+CREATE INDEX player_index ON Player(name);
