@@ -455,19 +455,15 @@ public class Soccer {
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         Set<Integer> mids = new HashSet<>();
         while (rs.next()) {
-          if (!mids.contains(rs.getInt(6))) {
-            mids.add(rs.getInt(6));
-
             StringBuilder sb = new StringBuilder();
 
             sb.append(rs.getDate(1) + "\t");
             sb.append(rs.getString(2) + "\t");
-            sb.append(rs.getString(3).toString() + "\t");
+            sb.append(rs.getString(3) + "\t");
             sb.append(rs.getString(4) + "\t");
             sb.append(rs.getString(5) + "\t");
 
             System.out.println(sb.toString());
-          }
         }
       }
     } catch (IllegalStateException | NoSuchElementException e) {
