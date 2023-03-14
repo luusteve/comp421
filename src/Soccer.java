@@ -69,7 +69,7 @@ public class Soccer {
               break;
             case 2:
               sc.nextLine();
-              insertInitialPlayerInformation(con, statement, sc);
+              insertInitialPlayerInformation(statement, sc);
               break;
             case 3:
             case 4:
@@ -89,117 +89,13 @@ public class Soccer {
       System.out.println("System.in was closed; exiting");
     }
 
-    // Creating a table
-    // try
-    // {
-    // String createSQL = "CREATE TABLE " + tableName + " (id INTEGER, name VARCHAR
-    // (25)) ";
-    // System.out.println (createSQL ) ;
-    // statement.executeUpdate (createSQL ) ;
-    // System.out.println ("DONE");
-    // }
-    // catch (SQLException e)
-    // {
-    // sqlCode = e.getErrorCode(); // Get SQLCODE
-    // sqlState = e.getSQLState(); // Get SQLSTATE
-
-    // // Your code to handle errors comes here;
-    // // something more meaningful than a print would be good
-    // System.out.println("Code: " + sqlCode + " sqlState: " + sqlState);
-    // System.out.println(e);
-    // }
-
-    // // Inserting Data into the table
-    // try
-    // {
-    // String insertSQL = "INSERT INTO " + tableName + " VALUES ( 1 , \'Vicki\' ) "
-    // ;
-    // System.out.println ( insertSQL ) ;
-    // statement.executeUpdate ( insertSQL ) ;
-    // System.out.println ( "DONE" ) ;
-
-    // insertSQL = "INSERT INTO " + tableName + " VALUES ( 2 , \'Vera\' ) " ;
-    // System.out.println ( insertSQL ) ;
-    // statement.executeUpdate ( insertSQL ) ;
-    // System.out.println ( "DONE" ) ;
-    // insertSQL = "INSERT INTO " + tableName + " VALUES ( 3 , \'Franca\' ) " ;
-    // System.out.println ( insertSQL ) ;
-    // statement.executeUpdate ( insertSQL ) ;
-    // System.out.println ( "DONE" ) ;
-
-    // }
-    // catch (SQLException e)
-    // {
-    // sqlCode = e.getErrorCode(); // Get SQLCODE
-    // sqlState = e.getSQLState(); // Get SQLSTATE
-
-    // // Your code to handle errors comes here;
-    // // something more meaningful than a print would be good
-    // System.out.println("Code: " + sqlCode + " sqlState: " + sqlState);
-    // System.out.println(e);
-    // }
-
-    // // Querying a table
-    // try
-    // {
-    // String querySQL = "SELECT id, name from " + tableName + " WHERE NAME =
-    // \'Vicki\'";
-    // System.out.println (querySQL) ;
-    // java.sql.ResultSet rs = statement.executeQuery ( querySQL ) ;
-
-    // while ( rs.next ( ) )
-    // {
-    // int id = rs.getInt ( 1 ) ;
-    // String name = rs.getString (2);
-    // System.out.println ("id: " + id);
-    // System.out.println ("name: " + name);
-    // }
-    // System.out.println ("DONE");
-    // }
-    // catch (SQLException e)
-    // {
-    // sqlCode = e.getErrorCode(); // Get SQLCODE
-    // sqlState = e.getSQLState(); // Get SQLSTATE
-
-    // // Your code to handle errors comes here;
-    // // something more meaningful than a print would be good
-    // System.out.println("Code: " + sqlCode + " sqlState: " + sqlState);
-    // System.out.println(e);
-    // }
-
-    // //Updating a table
-    // try
-    // {
-    // String updateSQL = "UPDATE " + tableName + " SET NAME = \'Mimi\' WHERE id =
-    // 3";
-    // System.out.println(updateSQL);
-    // statement.executeUpdate(updateSQL);
-    // System.out.println("DONE");
-
-    // // Dropping a table
-    // String dropSQL = "DROP TABLE " + tableName;
-    // System.out.println ( dropSQL ) ;
-    // statement.executeUpdate ( dropSQL ) ;
-    // System.out.println ("DONE");
-    // }
-    // catch (SQLException e)
-    // {
-    // sqlCode = e.getErrorCode(); // Get SQLCODE
-    // sqlState = e.getSQLState(); // Get SQLSTATE
-
-    // // Your code to handle errors comes here;
-    // // something more meaningful than a print would be good
-    // System.out.println("Code: " + sqlCode + " sqlState: " + sqlState);
-    // System.out.println(e);
-    // }
-
     // Finally but importantly close the statement and connection
     statement.close();
     con.close();
   }
 
   /**
-   * Inserts initial player to match
+   * List countries match number of goals and seats sold
    * 
    * @param con       Connection
    * @param statement Statement
@@ -215,60 +111,48 @@ public class Soccer {
           System.out.println("\n");
           break;
         }
-        String querySQL = "SELECT \n" +
-                "  T1.country AS team1_country, \n" +
-                "  T2.country AS team2_country, \n" +
-                "  M.match_date, \n" +
-                "  M.round, \n" +
-                "  COUNT(DISTINCT CASE WHEN PS.pid = P1.pid THEN 1 ELSE 0 END) AS team1_goals, \n" +
-                "  COUNT(DISTINCT CASE WHEN PS.pid = P2.pid THEN 1 ELSE 0 END) AS team2_goals, \n" +
-                "  COUNT(DISTINCT CASE WHEN T.mid = M.mid THEN 1 ELSE 0 END) AS seats_sold,\n" +
-                "  M.mid AS match_id\n" +
-                "FROM \n" +
-                "  Ticket T,\n" +
-                "  Team T1\n" +
-                "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
-                "  JOIN Player P1 ON P1.national_association_name = T1.national_association_name\n" +
-                "  JOIN Player P2 ON P2.national_association_name = T2.national_association_name \n" +
-                "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name\n" +
-                "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM1.mid = TIM2.mid\n" +
-                "  JOIN Match M ON TIM1.mid = M.mid\n" +
-                "  LEFT JOIN playerscored PS ON M.mid = PS.mid \n" +
-                "WHERE \n" +
-                "  (TIM1.national_association_name = T1.national_association_name AND T2.country = '" + country + "') OR \n" +
-                "  (TIM2.national_association_name = T2.national_association_name AND T1.country = '" + country + "') AND\n" +
-                "  M.mid NOT IN (\n" +
-                "    SELECT DISTINCT M2.mid\n" +
-                "    FROM Match M2\n" +
-                "    JOIN teaminmatch TIM1 ON TIM1.mid = M2.mid\n" +
-                "    JOIN teaminmatch TIM2 ON TIM2.mid = M2.mid\n" +
-                "    JOIN Team T1 ON T1.national_association_name = TIM1.national_association_name\n" +
-                "    JOIN Team T2 ON T2.national_association_name = TIM2.national_association_name\n" +
-                "    WHERE \n" +
-                "      (T1.country = '" + country + "' AND T2.country <> '" + country + "') OR \n" +
-                "      (T1.country <> '" + country + "' AND T2.country = '" + country + "')\n" +
-                "  )\n" +
-                "GROUP BY \n" +
-                "  M.mid, T1.country, T2.country, M.match_date, M.round;";
-        java.sql.ResultSet rs = statement.executeQuery(querySQL);
-        Set<Integer> mids = new HashSet<>();
-        while (rs.next()) {
-          if (!mids.contains(rs.getInt(8))) {
-            mids.add(rs.getInt(8));
 
-            StringBuilder sb = new StringBuilder();
-  
-            sb.append(rs.getString(1) + "\t");
-            sb.append(rs.getString(2) + "\t");
-            sb.append(rs.getDate(3).toString() + "\t");
-            sb.append(rs.getString(4) + "\t");
-            sb.append(rs.getInt(5) + "\t");
-            sb.append(rs.getInt(6) + "\t");
-            sb.append(rs.getInt(7) + "\t");
-  
-            System.out.println(sb.toString());
+        Map<String, List<List<String>>> teamInMatches = getTeaminmatches(statement, country);
+
+        for (Map.Entry<String, List<List<String>>> entry : teamInMatches.entrySet()) {
+          List<String> goalOne = new ArrayList<>();
+          List<String> goalTwo = new ArrayList<>();
+          List<String> seats = new ArrayList<>();
+          for (String teamOne : entry.getValue().get(0)) {
+            List<String> pids = getPlayersPidInTeam(statement, teamOne);
+            goalOne.add(String.valueOf(getCountGoalsByPlayersInTeam(statement, pids, entry.getKey())));
           }
+          for (String teamTwo : entry.getValue().get(1)) {
+            List<String> pids = getPlayersPidInTeam(statement, teamTwo);
+            goalTwo.add(String.valueOf(getCountGoalsByPlayersInTeam(statement, pids, entry.getKey())));
+          }
+
+          String tickets = String.valueOf(getCountTicketSoldByMid(statement, entry.getKey()));
+          seats.add(tickets);
+
+          List<List<String>> teams = entry.getValue();
+          teams.add(goalOne);
+          teams.add(goalTwo);
+          teams.add(seats);
+          teamInMatches.replace(entry.getKey(), teams);
         }
+
+        for (Map.Entry<String, List<List<String>>> entry : teamInMatches.entrySet()) {
+
+          StringBuilder sb = new StringBuilder();
+
+          sb.append("\t" + entry.getValue().get(0).get(0));
+          sb.append("\t" + entry.getValue().get(1).get(0));
+          sb.append("\t" + entry.getValue().get(2).get(0));
+          sb.append("\t" + entry.getValue().get(3).get(0));
+          sb.append("\t" + entry.getValue().get(4).get(0));
+          sb.append("\t" + entry.getValue().get(5).get(0));
+          sb.append("\t" + entry.getValue().get(6).get(0));
+
+          System.out.println(sb.toString());
+
+        }
+
       }
     } catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
@@ -276,7 +160,119 @@ public class Soccer {
 
   }
 
-  private static void insertInitialPlayerInformation(Connection con, Statement statement, Scanner sc)
+  private static int getCountTicketSoldByMid(Statement statement, String mid) throws SQLException {
+    int count = 0;
+
+    String querySQL = "SELECT COUNT(CASE WHEN T.mid = " + mid + " THEN 1 END) AS seats_sold FROM Ticket T;";
+    java.sql.ResultSet rs = statement.executeQuery(querySQL);
+
+    while (rs.next()) {
+
+      count += rs.getInt(1);
+
+    }
+
+    return count;
+  }
+
+  private static int getCountGoalsByPlayersInTeam(Statement statement, List<String> pids, String mid) throws SQLException {
+    int count = 0;
+    for (String pid : pids) {
+      String querySQL = "SELECT COUNT(CASE WHEN PS.pid = " + pid + " THEN 1 END) FROM Playerscored PS WHERE PS.mid =" + mid + ";";
+
+      java.sql.ResultSet rs = statement.executeQuery(querySQL);
+
+      while (rs.next()) {
+
+        count += rs.getInt(1);
+
+      }
+    }
+    return count;
+  }
+
+  private static Map<String, List<List<String>>> getTeaminmatches(Statement statement, String country)
+      throws SQLException {
+
+    String queryTeaminmatch = "SELECT \n" +
+        " TIM1.national_association_name AS team1, \n" +
+        " TIM2.national_association_name AS team2, \n" +
+        " TIM1.mid AS match_mid \n" +
+        " FROM \n" +
+        " Teaminmatch TIM1, \n" +
+        " Teaminmatch TIM2 \n" +
+        " WHERE \n" +
+        " TIM1.national_association_name <> TIM2.national_association_name AND \n" +
+        " TIM1.mid = TIM2.mid AND TIM1.national_association_name = \'Team " + country + "\';";
+
+    java.sql.ResultSet rs = statement.executeQuery(queryTeaminmatch);
+
+    Map<String, List<List<String>>> teamInMatches = new HashMap<>();
+    while (rs.next()) {
+      List<List<String>> teams = new ArrayList<>();
+      List<String> teamOne = new ArrayList<>();
+      List<String> teamTwo = new ArrayList<>();
+
+      teamOne.add(rs.getString(1));
+      teamTwo.add(rs.getString(2));
+      teams.add(teamOne);
+      teams.add(teamTwo);
+      if (teamInMatches.get(String.valueOf(rs.getInt(3))) == null) {
+        teamInMatches.put(String.valueOf(rs.getInt(3)), teams);
+      } else {
+        teamInMatches.replace(String.valueOf(rs.getInt(3)), teams);
+      }
+    }
+
+    for (Map.Entry<String, List<List<String>>> entry : teamInMatches.entrySet()) {
+      String querySql = "SELECT M.match_Date, M.round FROM Match M WHERE M.mid = " + entry.getKey() + ";";
+
+      java.sql.ResultSet resultSet = statement.executeQuery(querySql);
+
+      List<String> dates = new ArrayList<>();
+      List<String> rounds = new ArrayList<>();
+      while (resultSet.next()) {
+        dates.add(String.valueOf(resultSet.getDate(1)));
+        rounds.add(resultSet.getString(2));
+
+        List<List<String>> updatedTeams = entry.getValue();
+
+        updatedTeams.add(dates);
+        updatedTeams.add(rounds);
+        teamInMatches.replace(entry.getKey(), updatedTeams);
+      }
+
+    }
+
+    return teamInMatches;
+  }
+
+  private static List<String> getPlayersPidInTeam(Statement statement, String country) throws SQLException {
+    String querySQL = "SELECT P.pid FROM Player P WHERE P.national_association_name = \'" + country + "\';";
+
+    java.sql.ResultSet rs = statement.executeQuery(querySQL);
+
+    List<String> players = new ArrayList<>();
+    while (rs.next()) {
+      players.add(rs.getString(1));
+    }
+
+    return players;
+  }
+
+  private static Map<String, List<String>> getMatchGoals() {
+    return null;
+  }
+
+  /**
+   * Insert a player to a match
+   * 
+   * @param con
+   * @param statement
+   * @param sc
+   * @throws SQLException
+   */
+  private static void insertInitialPlayerInformation(Statement statement, Scanner sc)
       throws SQLException {
     try {
 
@@ -296,7 +292,7 @@ public class Soccer {
         StringBuilder sb = new StringBuilder();
         String mid = entry.getKey();
 
-        Map<String, List<String>> teamsByMid = getTeamsByMid(con, statement, mid);
+        Map<String, List<String>> teamsByMid = getTeamsByMid(statement, mid);
 
         String teamOne = teamsByMid.get(mid).get(0);
         String teamTwo = teamsByMid.get(mid).get(1);
@@ -328,14 +324,14 @@ public class Soccer {
         String country = result[1];
         String team = "Team " + country;
 
-        Map<String, List<List<String>>> teamInfo = getPlayersByTeam(con, statement, team);
+        Map<String, List<List<String>>> teamInfo = getPlayersByTeam(statement, team);
         List<String> pids = teamInfo.get(team).get(0);
         List<String> names = teamInfo.get(team).get(1);
         List<String> numbers = teamInfo.get(team).get(2);
         List<String> positions = teamInfo.get(team).get(3);
         Map<String, List<List<String>>> playerInfo = new HashMap<>();
         for (String pid : pids) {
-          playerInfo.putAll(getPlayerInfoWithPidAndMid(con, statement, pid, mid));
+          playerInfo.putAll(getPlayerInfoWithPidAndMid(statement, pid, mid));
         }
 
         List<String> nonAssignedPids = new ArrayList<>();
@@ -431,7 +427,7 @@ public class Soccer {
     }
   }
 
-  private static Map<String, List<String>> getTeamsByMid(Connection con, Statement statement, String mid)
+  private static Map<String, List<String>> getTeamsByMid(Statement statement, String mid)
       throws SQLException {
     String teamInMid = "SELECT DISTINCT TM.national_association_name FROM Teaminmatch AS TM WHERE TM.mid = \'"
         + mid + "\';";
@@ -448,7 +444,7 @@ public class Soccer {
     return teamsByMid;
   }
 
-  private static Map<String, List<List<String>>> getPlayersByTeam(Connection con, Statement statement, String team)
+  private static Map<String, List<List<String>>> getPlayersByTeam(Statement statement, String team)
       throws SQLException {
     String teamInMid = "SELECT DISTINCT P.pid, P.name, P.shirt_number, P.general_position FROM Player AS P WHERE P.national_association_name = \'"
         + team + "\';";
@@ -476,7 +472,7 @@ public class Soccer {
     return teamsByMid;
   }
 
-  private static Map<String, List<List<String>>> getPlayerInfoWithPidAndMid(Connection con, Statement statement,
+  private static Map<String, List<List<String>>> getPlayerInfoWithPidAndMid(Statement statement,
       String pid, String mid) throws SQLException {
     String playersInMid = "SELECT DISTINCT PPS.enter_time, PPS.exit_time, PPS.number_of_yellow_card, PPS.received_red_card FROM Playerplaysin AS PPS WHERE PPS.mid = \'"
         + mid + "\' AND PPS.pid = \'" + pid + "\';";
