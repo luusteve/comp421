@@ -54,15 +54,15 @@ insert into Stadium (stadium_name, location, capacity) values ('Aubrey Center', 
 
 ------------------------------------   Match   ------------------------------------
 
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (1, '2023-05-06', '0:07', '90', 'Harcourt Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (2, '2023-07-07', '15:06', '90', 'Joachim Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (3, '2023-04-02', '10:23', '90', 'Joachim Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (4, '2023-05-15', '2:16', '91', 'Mal Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (5, '2023-06-23', '3:41', '91', 'Mal Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (6, '2023-04-05', '3:20', '92', 'Brent Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (1, '2023-05-06', '0:07', '90', 'Harcourt Center', 'group-round');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (2, '2023-07-07', '15:06', '90', 'Joachim Center', 'group-round');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (3, '2023-04-02', '10:23', '90', 'Joachim Center', 'group-round');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (4, '2023-05-15', '2:16', '91', 'Mal Center', 'group-round');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (5, '2023-06-23', '3:41', '91', 'Mal Center', 'group-round');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (6, '2023-04-05', '3:20', '92', 'Brent Center', 'group-round');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (7, '2023-03-16', '21:57', '92', 'Ulrich Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (8, '2023-03-16', '19:08', '92', 'Marvin Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (9, '2023-03-29', '23:34', '94', 'Marvin Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (9, '2023-03-29', '23:34', '94', 'Marvin Center', 'group-round');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (10, '2023-03-14', '2:56', '105', 'Terrel Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (11, '2023-03-15', '1:56', '99', 'Terrel Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (12, '2023-08-30', '1:50', '96', 'Terrel Center', 'round-of-16');
