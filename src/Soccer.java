@@ -73,7 +73,8 @@ public class Soccer {
               break;
             case 3:
               sc.nextLine();
-              match_ref_team_info(statement);
+              match_ref_team_info(statement, sc);
+              break;
             case 4:
               sc.nextLine();
               exitApplication(con, statement);
@@ -433,7 +434,7 @@ public class Soccer {
     }
   }
 
-  private static void match_ref_team_info(Statement statement) throws SQLException {
+  private static void match_ref_team_info(Statement statement, Scanner sc) throws SQLException {
     try {
       while (true) {
         String querySQL = "SELECT \n" +
@@ -464,6 +465,13 @@ public class Soccer {
             sb.append(rs.getString(5) + "\t");
 
             System.out.println(sb.toString());
+        }
+        System.out.println(
+                "\nReturn to main menu [P]");
+        String country = sc.nextLine();
+        if (country.equals("P") || country.equals("p")) {
+          System.out.println("\n");
+          break;
         }
       }
     } catch (IllegalStateException | NoSuchElementException e) {
