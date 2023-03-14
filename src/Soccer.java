@@ -442,7 +442,8 @@ public class Soccer {
                 "  R.name AS ref_name, \n" +
                 "  R.country AS ref_country, \n" +
                 "  T1.country AS team_1_country,\n" +
-                "  T2.country AS team_2_country\n" +
+                "  T2.country AS team_2_country,\n" +
+                "  M.mid AS mid\n" +
                 "FROM \n" +
                 "  Team T1\n" +
                 "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
@@ -456,6 +457,8 @@ public class Soccer {
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         Set<Integer> mids = new HashSet<>();
         while (rs.next()) {
+          if (!mids.contains(rs.getInt(6))) {
+            mids.add(rs.getInt(6));
             StringBuilder sb = new StringBuilder();
 
             sb.append(rs.getDate(1) + "\t");
@@ -465,6 +468,7 @@ public class Soccer {
             sb.append(rs.getString(5) + "\t");
 
             System.out.println(sb.toString());
+          }
         }
         System.out.println(
                 "\nReturn to main menu [P]");
