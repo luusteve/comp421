@@ -54,17 +54,17 @@ insert into Stadium (stadium_name, location, capacity) values ('Aubrey Center', 
 
 ------------------------------------   Match   ------------------------------------
 
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (1, '2023-05-06', '0:07', '90', 'Harcourt Center', 'round-of-16';
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (1, '2023-05-06', '0:07', '90', 'Harcourt Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (2, '2023-07-07', '15:06', '90', 'Joachim Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (3, '2023-04-02', '10:23', '90', 'Joachim Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (4, '2023-05-15', '2:16', '91', 'Mal Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (5, '2023-06-23', '3:41', '91', 'Mal Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (6, '2023-04-05', '3:20', '92', 'Brent Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (7, '2023-03-19', '21:57', '92', 'Ulrich Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (8, '2023-03-26', '19:08', '92', 'Marvin Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (7, '2023-03-16', '21:57', '92', 'Ulrich Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (8, '2023-03-16', '19:08', '92', 'Marvin Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (9, '2023-03-29', '23:34', '94', 'Marvin Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (10, '2023-05-30', '2:56', '105', 'Terrel Center', 'round-of-16');
-insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (11, '2023-03-20', '1:56', '99', 'Terrel Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (10, '2023-03-14', '2:56', '105', 'Terrel Center', 'round-of-16');
+insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (11, '2023-03-15', '1:56', '99', 'Terrel Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (12, '2023-08-30', '1:50', '96', 'Terrel Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (13, '2023-06-16', '15:51', '96', 'Edlin Center', 'round-of-16');
 insert into Match (mid, match_date, match_time, match_length, stadium_name, round) values (14, '2023-05-26', '14:28', '110', 'Winn Center', 'round-of-16');
@@ -361,10 +361,10 @@ insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (47, 8, 17, 87, 'Goalkeeper', 0, false);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (48, 8, 41, 79, 'Striker', 2, false);
 
-insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (49, 10, 31, 53, 'Midfielder', 0, false);
-insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (50, 10, 23, 79, 'Defender', 0, false);
-insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (51, 10, 29, 86, 'Striker', 1, false);
-insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (52, 10, 38, 50, 'Striker', 1, false);
+-- insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (49, 10, 31, 53, 'Midfielder', 0, false);
+-- insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (50, 10, 23, 79, 'Defender', 0, false);
+-- insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (51, 10, 29, 86, 'Striker', 1, false);
+-- insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (52, 10, 38, 50, 'Striker', 1, false);
 
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (53, 10, 23, 59, 'Striker', 1, true);
 insert into Playerplaysin (pid, mid, enter_time, exit_time, position, number_of_yellow_card, received_red_card) values (54, 10, 34, 61, 'Goalkeeper', 2, false);

@@ -1,0 +1,1 @@
+CREATE INDEX player_index ON Player(name);
