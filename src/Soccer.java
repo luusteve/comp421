@@ -58,7 +58,7 @@ public class Soccer {
     Scanner sc = new Scanner(System.in);
     try {
       while (true) {
-        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Insert goal scored\n\t4. Exit application\nPlease enter your option:";
+        String options = "1. List information of matches of a country\n\t2. Insert initial player information for a match \n\t3. Match Country Info\n\t4. Exit application\nPlease enter your option:";
         String validOptionMsg = "Please choose a valid option:\n\t" + options;
         System.out.println("Soccer Main Menu\n\t" + options);
         if (sc.hasNextInt()) {
@@ -72,6 +72,8 @@ public class Soccer {
               insertInitialPlayerInformation(con, statement, sc);
               break;
             case 3:
+              sc.nextLine();
+              match_ref_team_info(statement);
             case 4:
               sc.nextLine();
               exitApplication(con, statement);
@@ -426,6 +428,48 @@ public class Soccer {
 
       }
 
+    } catch (IllegalStateException | NoSuchElementException e) {
+      System.out.println("System.in was closed; exiting");
+    }
+  }
+
+  private static void match_ref_team_info(Statement statement) throws SQLException {
+    try {
+      while (true) {
+        String querySQL = "SELECT \n" +
+                "  M.match_date, \n" +
+                "  R.name AS ref_name, \n" +
+                "  R.country AS ref_country, \n" +
+                "  T1.country AS team_1_country,\n" +
+                "  T2.country AS team_2_country\n" +
+                "FROM \n" +
+                "  Team T1\n" +
+                "  JOIN Team T2 ON T2.national_association_name <> T1.national_association_name\n" +
+                "  JOIN Match M ON 1 = 1\n" +
+                "  JOIN teaminmatch TIM1 ON TIM1.national_association_name = T1.national_association_name AND TIM1.mid = M.mid\n" +
+                "  JOIN teaminmatch TIM2 ON TIM2.national_association_name = T2.national_association_name AND TIM2.mid = M.mid\n" +
+                "  JOIN refereeoversees RO ON RO.mid = M.mid\n" +
+                "  JOIN Referee R ON R.pid = RO.pid\n" +
+                "GROUP BY \n" +
+                "  M.mid, M.match_date, R.name, R.country, T1.country, T2.country;";
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        Set<Integer> mids = new HashSet<>();
+        while (rs.next()) {
+          if (!mids.contains(rs.getInt(6))) {
+            mids.add(rs.getInt(6));
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.append(rs.getDate(1) + "\t");
+            sb.append(rs.getString(2) + "\t");
+            sb.append(rs.getString(3).toString() + "\t");
+            sb.append(rs.getString(4) + "\t");
+            sb.append(rs.getString(5) + "\t");
+
+            System.out.println(sb.toString());
+          }
+        }
+      }
     } catch (IllegalStateException | NoSuchElementException e) {
       System.out.println("System.in was closed; exiting");
     }
