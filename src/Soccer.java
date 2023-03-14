@@ -260,10 +260,6 @@ public class Soccer {
     return players;
   }
 
-  private static Map<String, List<String>> getMatchGoals() {
-    return null;
-  }
-
   /**
    * Insert a player to a match
    * 
